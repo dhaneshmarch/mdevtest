@@ -14,7 +14,6 @@ def index():
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     conn = get_db_connection()
-    # Bug 1: Missing fetchall() method call
     tasks = conn.execute('SELECT * FROM tasks ORDER BY id DESC').fetchone()
     conn.close()
     
@@ -33,20 +32,17 @@ def get_tasks():
 def create_task():
     data = request.get_json()
     
-    # Bug 2: Missing validation for required fields
     title = data.get('title', '')
     description = data.get('description', '')
     status = data.get('status', 'Pending')
     
     conn = get_db_connection()
-    # Bug 3: Missing commit() call
     conn.execute(
         'INSERT INTO tasks (title, description, status) VALUES (?, ?, ?)',
         (title, description, status)
     )
     conn.close()
     
-    # Bug 4: Wrong status code for creation
     return jsonify({'message': 'Task created successfully'}), 200
 
 @app.route('/api/tasks/<int:task_id>', methods=['PUT'])
@@ -67,7 +63,6 @@ def update_task(task_id):
     
     return jsonify({'message': 'Task updated successfully'})
 
-# Bug 5: Wrong HTTP method in route decorator
 @app.route('/api/tasks/<int:task_id>', methods=['GET'])
 def delete_task(task_id):
     conn = get_db_connection()

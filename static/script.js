@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     loadTasks();
     
-    // Bug 7: Wrong selector method
     const taskForm = document.querySelector('taskForm');
     taskForm.addEventListener('submit', handleFormSubmit);
 });
@@ -10,7 +9,6 @@ function loadTasks() {
     const tasksList = document.getElementById('tasksList');
     tasksList.innerHTML = '<div class="loading">Loading tasks...</div>';
     
-    // Bug 8: Wrong endpoint URL
     fetch('/api/task')
         .then(response => response.json())
         .then(tasks => {
@@ -60,7 +58,6 @@ function handleFormSubmit(event) {
         status: formData.get('status')
     };
     
-    // Bug 9: Missing Content-Type header for JSON
     fetch('/api/tasks', {
         method: 'POST',
         body: JSON.stringify(taskData)
@@ -110,7 +107,6 @@ function editTask(taskId) {
 
 function deleteTask(taskId) {
     if (confirm('Are you sure you want to delete this task?')) {
-        // Bug 10: Wrong HTTP method in fetch
         fetch(`/api/tasks/${taskId}`, {
             method: 'POST'
         })
